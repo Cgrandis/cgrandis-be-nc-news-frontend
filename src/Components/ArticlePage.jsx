@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import CommentList from './CommentList';
 
 function ArticlePage() {
     const { article_id } = useParams(); 
@@ -48,6 +49,7 @@ function ArticlePage() {
         <img src={article_img_url} alt={title} className="article-image" />
         <p>{body}</p>
         <p>{votes} votes | {comment_count} comments</p>
+        <CommentList article_id={article_id} />
       </div>
     );
   }
