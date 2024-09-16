@@ -5,8 +5,8 @@ import ArticleCard from './ArticleCard';
 
 function ArticlesList() {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true); // For loading state
-  const [error, setError] = useState(null);     // For error handling
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
@@ -17,7 +17,16 @@ function ArticlesList() {
       })
       .catch((err) => {
         console.error(err);
-        setError('Failed to fetch articles');
+        if (err.response) {
+          // Server responded with a status other than 2xx
+          setError(`Error: ${err.response.status} ${err.response.statusText}`);
+        } else if (err.request) {
+          // Request was made but no response received
+          setError('Error: No response from server');
+        } else {
+          // Something else happened
+          setError('Error: Unable to fetch articles');
+        }
         setLoading(false);
       });
   }, []);
