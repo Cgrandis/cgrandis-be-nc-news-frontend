@@ -1,6 +1,6 @@
-// src/components/CommentList.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 function CommentList({ article_id }) {
   const [comments, setComments] = useState([]);
@@ -16,7 +16,7 @@ function CommentList({ article_id }) {
       .catch((err) => {
         console.error(err);
         setLoading(false);
-        // Handle errors appropriately
+      
       });
   }, [article_id]);
 
@@ -41,5 +41,9 @@ function CommentList({ article_id }) {
     </div>
   );
 }
+
+CommentList.propTypes = {
+  article_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
 
 export default CommentList;
