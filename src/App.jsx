@@ -1,7 +1,8 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ArticlesList from './Components/ArticlesList'
 import Header from './Components/Header'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ArticlePage from './Components/ArticlePage';
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
       <Header />
       <Routes>
       <Route path="/" element={<ArticlesList />} />
+      <Route path="/articles/:article_id" element={<ArticlePage />} />
       </Routes>
       </Router>
     </div>
