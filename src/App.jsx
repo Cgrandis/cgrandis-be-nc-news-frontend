@@ -1,17 +1,21 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'; 
-import ArticleList from './Components/ArticlesList'
+import ArticlesList from './Components/ArticlesList'
+import Header from './Components/Header'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
 
 
   return (
-    <Router>
+    <div className="App">
+      <Router>
+      <Header />
       <Routes>
-        <Route path="/articles" elemment={<ArticleList />} />
+      <Route path="/" element={<ArticlesList />} />
       </Routes>
-    </Router>
-  )
+      </Router>
+    </div>
+  );
 }
 
 export default App
