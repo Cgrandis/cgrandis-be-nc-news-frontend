@@ -1,15 +1,16 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'; 
+import ArticleList from './Components/ArticlesList'
 
 function App() {
 
 
   return (
-    <>
-      <div>
-        NCCG news will be here
-      </div>
-    
-    </>
+    <Router>
+      <Routes>
+        <Route path="/articles" elemment={<ArticleList />} />
+      </Routes>
+    </Router>
   )
 }
 
