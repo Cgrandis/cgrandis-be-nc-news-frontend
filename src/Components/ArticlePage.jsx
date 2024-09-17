@@ -63,24 +63,24 @@ function ArticlePage() {
 
 
   const handleVote = (increment) => {
-    // Prevent multiple voting in the same direction
+  
     if (voteChange === increment) return;
 
-    const newVoteChange = voteChange + increment; // New vote state (-1, 0, +1)
-    setVoteChange(increment); // Update the user's vote state
+    const newVoteChange = voteChange + increment; 
+    setVoteChange(increment);
 
-    // Optimistically update the UI
+    
     setVotes((prevVotes) => prevVotes + increment);
 
-    // Send the request to the backend
+    
     axios
       .patch(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`, {
         inc_votes: increment,
       })
       .catch(() => {
-        // Rollback the UI if the request fails
-        setVotes((prevVotes) => prevVotes - increment); // Rollback vote in case of error
-        setVoteChange(0); // Reset the vote state
+        
+        setVotes((prevVotes) => prevVotes - increment); 
+        setVoteChange(0); 
         alert('Something went wrong. Please try again.');
       });
   };
@@ -117,7 +117,7 @@ function ArticlePage() {
       </button>
 
       <AddComment article_id={article_id} onCommentAdded={handleCommentAdded} />
-      {/* <CommentList comments={comments} /> */}
+      
       <CommentList comments={comments}/>
     </div>
   );
