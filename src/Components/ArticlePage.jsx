@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CommentList from './CommentList';
+import AddComment from './AddComment';
 
 function ArticlePage() {
   const { article_id } = useParams(); 
+
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
   const [voteChange, setVoteChange] = useState(0);
+  const [votes, setVotes] = useState(0);
+  const [comments,setComments] = useState([]);
+
+  //console.log("article_id from params:", article_id);
 
   useEffect(() => {
     axios
@@ -26,17 +32,55 @@ function ArticlePage() {
         }
         setLoading(false);
       });
+
+      axios
+      .get(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}/comments`)
+      .then((response) => {
+        setComments(response.data.comments);
+      })
+      .catch((err) => {
+        console.error(err);
+        
+      });
+
+      axios
+      .get(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`)
+      .then((response) => {
+        setArticle(response.data.article);
+        setVotes(response.data.article.votes);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Error: Unable to fetch article');
+        setLoading(false);
+      });
   }, [article_id]);
 
-  const handleVote = (increment) => {
-    setVoteChange((prevChange) => prevChange + increment);
+  const handleCommentAdded = (newComment) => {
+    setComments((prevComments) => [newComment, ...prevComments]);
+  };
 
+
+  const handleVote = (increment) => {
+    // Prevent multiple voting in the same direction
+    if (voteChange === increment) return;
+
+    const newVoteChange = voteChange + increment; // New vote state (-1, 0, +1)
+    setVoteChange(increment); // Update the user's vote state
+
+    // Optimistically update the UI
+    setVotes((prevVotes) => prevVotes + increment);
+
+    // Send the request to the backend
     axios
       .patch(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`, {
         inc_votes: increment,
       })
       .catch(() => {
-        setVoteChange((prevChange) => prevChange - increment);
+        // Rollback the UI if the request fails
+        setVotes((prevVotes) => prevVotes - increment); // Rollback vote in case of error
+        setVoteChange(0); // Reset the vote state
         alert('Something went wrong. Please try again.');
       });
   };
@@ -44,7 +88,7 @@ function ArticlePage() {
   if (loading) return <p>Loading article...</p>;
   if (error) return <p>{error}</p>;
 
-  const { title, author, created_at, body, article_img_url, votes, comment_count } = article;
+  const { title, author, created_at, body, article_img_url, comment_count } = article;
 
   return (
     <div className="article-page">
@@ -55,17 +99,26 @@ function ArticlePage() {
       <img src={article_img_url} alt={title} className="article-image" />
       <p>{body}</p>
 
-      <p>{votes + voteChange} votes | {comment_count} comments</p>
-
+      <p>{votes} votes | {comment_count} comments</p>
     
-      <button onClick={() => handleVote(1)} disabled={voteChange === 1}>
+      <button
+        onClick={() => handleVote(1)}
+        disabled={voteChange === 1}
+        style={{ backgroundColor: voteChange === 1 ? 'green' : 'gray' }}
+      >
         ThumbsUp
       </button>
-      <button onClick={() => handleVote(-1)} disabled={voteChange === -1}>
+      <button
+        onClick={() => handleVote(-1)}
+        disabled={voteChange === -1}
+        style={{ backgroundColor: voteChange === -1 ? 'red' : 'gray' }}
+      >
         ThumbsDown
       </button>
 
-      <CommentList article_id={article_id} />
+      <AddComment article_id={article_id} onCommentAdded={handleCommentAdded} />
+      {/* <CommentList comments={comments} /> */}
+      <CommentList comments={comments}/>
     </div>
   );
 }
