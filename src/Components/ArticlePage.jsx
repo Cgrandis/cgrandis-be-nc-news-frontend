@@ -13,6 +13,7 @@ function ArticlePage() {
   const [voteChange, setVoteChange] = useState(0);
   const [votes, setVotes] = useState(0);
   const [comments,setComments] = useState([]);
+  const currentUser = 'tickle122';
 
   //console.log("article_id from params:", article_id);
 
@@ -61,18 +62,18 @@ function ArticlePage() {
     setComments((prevComments) => [newComment, ...prevComments]);
   };
 
+  const handleDeleteComment = (comment_id) => {
+    setComments((prevComments) => prevComments.filter(comment => comment.comment_id !== comment_id));
+  };
 
   const handleVote = (increment) => {
   
     if (voteChange === increment) return;
 
     const newVoteChange = voteChange + increment; 
-    setVoteChange(increment);
-
-    
+    setVoteChange(increment);    
     setVotes((prevVotes) => prevVotes + increment);
 
-    
     axios
       .patch(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`, {
         inc_votes: increment,
@@ -118,7 +119,7 @@ function ArticlePage() {
 
       <AddComment article_id={article_id} onCommentAdded={handleCommentAdded} />
       
-      <CommentList comments={comments}/>
+      <CommentList comments={comments} currentUser={currentUser} onDeleteComment={handleDeleteComment} />
     </div>
   );
 }
