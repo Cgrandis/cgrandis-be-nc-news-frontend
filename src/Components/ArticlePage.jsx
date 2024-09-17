@@ -70,7 +70,6 @@ function ArticlePage() {
   
     if (voteChange === increment) return;
 
-    const newVoteChange = voteChange + increment; 
     setVoteChange(increment);    
     setVotes((prevVotes) => prevVotes + increment);
 
