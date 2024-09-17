@@ -1,10 +1,10 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ArticlesList from './Components/ArticlesList';
+import ArticlesList from './Components/articles/ArticlesList';
 import Header from './Components/Header';
-import ArticlePage from './Components/ArticlePage';
-import TopicsPage from './Components/TopicsPage';
-import TopicArticlesPage from './Components/TopicArticlesPage';
+import ArticlePage from './Components/articles/ArticlePage';
+import TopicsPage from './Components/topics/TopicsPage';
+import TopicArticlesPage from './Components/topics/TopicArticlesPage';
 
 function App() {
 

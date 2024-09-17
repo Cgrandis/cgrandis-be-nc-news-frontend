@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import CommentList from './CommentList';
-import AddComment from './AddComment';
+import CommentList from '../comments/CommentList';
+import AddComment from '../comments/AddComment';
 
 function ArticlePage() {
   const { article_id } = useParams(); 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import ArticleCard from './ArticleCard'; // Assuming you have an ArticleCard component to display each article
+import ArticleCard from '../articles/ArticleCard'; 
 
 function TopicArticlesPage() {
-  const { topic } = useParams(); // Get the topic from the URL
+  const { topic } = useParams(); 
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ function TopicArticlesPage() {
         setError(`Error: Unable to fetch articles for topic "${topic}"`);
         setLoading(false);
       });
-  }, [topic]); // Re-fetch articles when topic_slug changes
+  }, [topic]);
 
   if (loading) return <p>Loading articles...</p>;
   if (error) return <p>{error}</p>;
