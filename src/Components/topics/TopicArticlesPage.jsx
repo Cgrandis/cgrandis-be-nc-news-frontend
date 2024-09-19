@@ -1,25 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import ArticleCard from '../articles/ArticleCard'; 
+import { fetchArticlesByTopic } from '../../ApiServices/topicsApi';
+import ArticleCard from '../articles/ArticleCard';
+import '../../App.css';
 
 function TopicArticlesPage() {
-  const { topic } = useParams(); 
+  const { topic } = useParams();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`https://cg-nc-news-project.onrender.com/api/articles?topic=${topic}`)
-      .then((response) => {
-        setArticles(response.data.articles);
-        
+    fetchArticlesByTopic(topic)
+      .then((data) => {
+        setArticles(data);
         setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        setError(`Error: Unable to fetch articles for topic "${topic}"`);
+        setError(err.message);
         setLoading(false);
       });
   }, [topic]);

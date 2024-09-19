@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import '../../App.css';
 
 function ArticleCard({ article }) {
   const { article_id, article_img_url, title, author, topic } = article; 
@@ -15,15 +16,5 @@ function ArticleCard({ article }) {
     </Link>
   );
 }
-
-ArticleCard.propTypes = {
-  article: PropTypes.shape({
-    article_id: PropTypes.number.isRequired,
-    article_img_url: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    topic: PropTypes.string,
-  }).isRequired,
-};
 
 export default ArticleCard;

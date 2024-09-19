@@ -1,94 +1,66 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import CommentList from '../comments/CommentList';
 import AddComment from '../comments/AddComment';
+import { fetchArticleById, fetchCommentsByArticleId, updateArticleVotes } from '../../ApiServices/articlesApi'; 
+import '../../App.css';
 
 function ArticlePage() {
   const { article_id } = useParams(); 
-
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
   const [voteChange, setVoteChange] = useState(0);
   const [votes, setVotes] = useState(0);
-  const [comments,setComments] = useState([]);
+  const [comments, setComments] = useState([]);
   const currentUser = 'tickle122';
 
-  //console.log("article_id from params:", article_id);
-
   useEffect(() => {
-    axios
-      .get(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`)
-      .then((response) => {
-        setArticle(response.data.article);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        if (err.response) {
-          setError(`Error: ${err.response.status} ${err.response.statusText}`);
-        } else {
-          setError('Error: Unable to fetch article');
-        }
-        setLoading(false);
-      });
+    const getArticleData = async () => {
+      try {
+        const fetchedArticle = await fetchArticleById(article_id);
+        const fetchedComments = await fetchCommentsByArticleId(article_id);
 
-      axios
-      .get(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}/comments`)
-      .then((response) => {
-        setComments(response.data.comments);
-      })
-      .catch((err) => {
-        console.error(err);
-        
-      });
+        setArticle(fetchedArticle);
+        setVotes(fetchedArticle.votes);
+        setComments(fetchedComments);
+      } catch (err) {
+        setError(err.message);
+      } finally { // finally does it happen whatever has returned from 
+        setLoading(false);
+      }
+    };
 
-      axios
-      .get(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`)
-      .then((response) => {
-        setArticle(response.data.article);
-        setVotes(response.data.article.votes);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Error: Unable to fetch article');
-        setLoading(false);
-      });
+    getArticleData();
   }, [article_id]);
 
   const handleCommentAdded = (newComment) => {
     setComments((prevComments) => [newComment, ...prevComments]);
   };
 
-  const handleDeleteComment = (comment_id) => {
-    setComments((prevComments) => prevComments.filter(comment => comment.comment_id !== comment_id));
-  };
-
-  const handleVote = (increment) => {
-  
+  const handleVote = async (increment) => {
+    // Preventing users voting the same way twice in a row
     if (voteChange === increment) return;
 
     setVoteChange(increment);    
     setVotes((prevVotes) => prevVotes + increment);
 
-    axios
-      .patch(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}`, {
-        inc_votes: increment,
-      })
-      .catch(() => {
-        
-        setVotes((prevVotes) => prevVotes - increment); 
-        setVoteChange(0); 
-        alert('Something went wrong. Please try again.');
-      });
+    try {
+       // Wait for the API call to update the backend vote
+      await updateArticleVotes(article_id, increment);
+    } catch {
+      //if the call back fails, rollback the vote and reset it
+      setVotes((prevVotes) => prevVotes - increment); 
+      setVoteChange(0); 
+      alert('Something went wrong. Please try again.');
+    }
   };
 
   if (loading) return <p>Loading article...</p>;
   if (error) return <p>{error}</p>;
 
   const { title, author, created_at, body, article_img_url, comment_count } = article;
+ // desconstruct the article object extracting it's properties
 
   return (
     <div className="article-page">
@@ -118,7 +90,7 @@ function ArticlePage() {
 
       <AddComment article_id={article_id} onCommentAdded={handleCommentAdded} />
       
-      <CommentList comments={comments} currentUser={currentUser} onDeleteComment={handleDeleteComment} />
+      <CommentList comments={comments} currentUser={currentUser} />
     </div>
   );
 }

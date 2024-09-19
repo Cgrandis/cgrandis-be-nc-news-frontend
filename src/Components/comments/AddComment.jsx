@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { postComment } from '../../ApiServices/commentssApi';
+import '../../App.css';
 
 function AddComment({ article_id, onCommentAdded }) {
   const [commentBody, setCommentBody] = useState('');
@@ -8,10 +9,10 @@ function AddComment({ article_id, onCommentAdded }) {
   const [error, setError] = useState(null); 
   const [successMessage, setSuccessMessage] = useState(''); 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (commentBody.trim() === '') {
+    if (commentBody.trim() === '') { // error for empty comments
       setError('Comment cannot be empty.');
       return;
     }
@@ -19,29 +20,18 @@ function AddComment({ article_id, onCommentAdded }) {
     setIsSubmitting(true);
     setError(null);
 
-    axios
-      .post(`https://cg-nc-news-project.onrender.com/api/articles/${article_id}/comments`, {
-        username: 'tickle122',
-        body: commentBody,
-      })
-      .then((response) => {
-        setCommentBody('');
-        setIsSubmitting(false);
-        setSuccessMessage('Comment posted successfully!');
-        onCommentAdded(response.data.comment); 
-    
-        setTimeout(() => setSuccessMessage(''), 3000);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Failed to post comment. Please try again.');
-        if (err.response && err.response.status === 500) {
-          setError('Internal server error. Please try again later.');
-        } else if (err.response && err.response.status === 400) {
-          setError('Invalid comment data.');
-        }
-        setIsSubmitting(false);
-      });
+    try {
+      const newComment = await postComment(article_id, 'tickle122', commentBody);
+      setCommentBody('');
+      setSuccessMessage('Comment posted successfully!');
+      onCommentAdded(newComment); 
+
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setError(err.message);
+    } finally { // finally does it happen whatever has returned from 
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -65,10 +55,5 @@ function AddComment({ article_id, onCommentAdded }) {
     </div>
   );
 }
-
-AddComment.propTypes = {
-  article_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onCommentAdded: PropTypes.func.isRequired,
-};
 
 export default AddComment;
