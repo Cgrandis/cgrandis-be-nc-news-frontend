@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { deleteComment } from '../../ApiServices/commentssApi';
 import '../../App.css';

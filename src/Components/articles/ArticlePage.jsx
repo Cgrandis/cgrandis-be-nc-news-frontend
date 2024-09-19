@@ -38,6 +38,10 @@ function ArticlePage() {
     setComments((prevComments) => [newComment, ...prevComments]);
   };
 
+  const handleDeleteComment = (comment_id) => {
+    setComments((prevComments) => prevComments.filter(comment => comment.comment_id !== comment_id));
+  };
+
   const handleVote = async (increment) => {
     // Preventing users voting the same way twice in a row
     if (voteChange === increment) return;
@@ -90,7 +94,7 @@ function ArticlePage() {
 
       <AddComment article_id={article_id} onCommentAdded={handleCommentAdded} />
       
-      <CommentList comments={comments} currentUser={currentUser} />
+      <CommentList comments={comments} currentUser={currentUser} onDeleteComment={handleDeleteComment}/>
     </div>
   );
 }
