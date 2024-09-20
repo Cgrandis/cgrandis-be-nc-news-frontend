@@ -1,8 +1,31 @@
-# React + Vite
+# React + Vite NCCG NEWS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Deployed site version it at
+https://nccgnews.netlify.app/
 
-Currently, two official plugins are available:
+This project creates a back and front end for a social news aggregation, web content rating and discussion website. It has articles which are divided into topics, and each article has user-curated ratings from upvotes and downvotes using the API. Users can also add and delete comments about an article.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+backend repository
+https://github.com/Cgrandis/cg-nc-news-project
+
+Instalation
+1. Clone the repository:
+    git clone https://github.com/Cgrandis/cg-nc-news-project.git
+
+2. Navigte into the project directory:
+
+3. install the dependencies:
+    
+    npm install
+
+4. To start the development server, run:
+
+    npm start
+
+5. To build the app for production, run:
+
+    npm run build
+
+Contributions are welcome! Feel free to open issues.
+
+This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
