@@ -40,7 +40,7 @@ function Header() {
     <header className="header">
       <div className="header-content">
         <button className="menu-button" onClick={toggleMenu}>
-          <span>Menu</span>
+          <span className="menu-icon"></span>
         </button>
         
         <Link to="/" className="app-name-link">

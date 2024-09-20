@@ -17,7 +17,7 @@ function ArticlesList() {
         setArticles(fetchedArticles);
       } catch (err) {
         setError(err.message);
-      } finally { // finally does it happen whatever has returned from 
+      } finally { 
         setLoading(false);
       }
     };
@@ -49,10 +49,11 @@ function ArticlesList() {
           {order === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
         </button>
       </div>
-
-      {articles.map((article) => (
-        <ArticleCard key={article.article_id} article={article} />
-      ))}
+    
+        {articles.map((article) => (
+          <ArticleCard key={article.article_id} article={article} />
+        ))}
+    
     </div>
   );
 }

@@ -28,12 +28,17 @@ function TopicArticlesPage() {
 
   return (
     <div className="topic-articles-page">
-      <h1>Articles for {topic}</h1>
-      {articles.length === 0 ? (
-        <p>No articles available for this topic.</p>
-      ) : (
-        articles.map((article) => <ArticleCard key={article.article_id} article={article} />)
-      )}
+      <div className="topic-header">
+        <h1>List of articles for {topic}</h1>
+      </div>
+
+      <div className="articles-container">
+        {articles.length === 0 ? (
+          <p>No articles available for this topic.</p>
+        ) : (
+          articles.map((article) => <ArticleCard key={article.article_id} article={article} />)
+        )}
+      </div>
     </div>
   );
 }

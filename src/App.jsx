@@ -13,15 +13,19 @@ function App() {
   return (
     <div className="App">
       <Router>
+        <header className='app-header'>
           <Header />
-        <Routes>
+          </header> 
+          <main className='main-content'>
+        <Routes>          
           <Route path="/" element={<ArticlesList />} />
           <Route path="/articles" element={<ArticlesList />} />
           <Route path="/topics" element={<TopicsPage />} />
           <Route path='/topics/:topic' element={<TopicArticlesPage />} />
           <Route path="/articles/:article_id" element={<ArticlePage />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />          
       </ Routes>
+      </main>
       </Router>
     </div>
   );
